@@ -94,11 +94,34 @@ def alphabeta_cutoff(state, game, d=4, eval_fn=None):
 
     def max_value(state, alpha, beta, depth):
         ### ... you fill this in ...
-        pass
+
+        # Cutoff test
+        if depth >= d:
+            return eval_fn(state)
+
+        v = -infinity
+        for a, s in game.successors(state):
+            v = max(v, min_value(s, alpha, beta, depth+1))
+            if v >= beta:
+                return v
+            alpha = max(alpha, v)
+        return v
+
 
     def min_value(state, alpha, beta, depth):
         ### ... you fill this in ...
-        pass
+
+        # Cutoff test
+        if depth >= d:
+            return eval_fn(state)
+
+        v = infinity
+        for a, s in game.successors(state):
+            v = min(v, max_value(s, alpha, beta, depth+1))
+            if v <= alpha:
+                return v
+            beta = min(beta, v)
+        return v
 
     action, state = argmax(game.successors(state), lambda x: min_value(x[1], -infinity, infinity, 0))
     return action
