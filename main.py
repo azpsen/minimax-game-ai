@@ -57,11 +57,29 @@ def alphabeta(state, game):
 
     def max_value(state, alpha, beta):
         ### ... you fill this in ...
-        pass
+        if game.terminal_test(state):
+            return game.utility(state, player)
+
+        v = -infinity
+        for a, s in game.successors(state):
+            v = max(v, min_value(s, alpha, beta))
+            if v >= beta:
+                return v
+            alpha = max(alpha, v)
+        return v
 
     def min_value(state, alpha, beta):
         ### ... you fill this in ...
-        pass
+        if game.terminal_test(state):
+            return game.utility(state, player)
+
+        v = infinity
+        for a, s in game.successors(state):
+            v = min(v, max_value(s, alpha, beta))
+            if v <= alpha:
+                return v
+            beta = min(beta, v)
+        return v
 
     action, state = argmax(game.successors(state), lambda x: min_value(x[1], -infinity, infinity))
     return action
